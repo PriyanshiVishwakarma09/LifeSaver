@@ -1,6 +1,6 @@
 [versions]
 agp = "8.8.0"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 composeCompiler = "1.6.10"
 compose = "2024.05.00"
 androidx-core = "1.13.1"
@@ -8,14 +8,15 @@ lifecycle = "2.9.2"
 activity-compose = "1.10.1"
 ui = "1.6.7"
 material3 = "1.2.1"
-firebase-auth = "22.3.0"
-#hilt = "2.48"
+firebase-auth = "22.3.1"
+firebase-database = "20.3.1"
+#hilt = "2.51"
 #hilt-android = "2.48"
 #hilt-compiler = "2.48"
 firebase-bom = "34.0.0"
 maps = "18.1.0"
 play-services-location = "21.1.0"
-permission = "0.34.0-alpha"
+permission = "0.32.0"
 compose-runtime-livedata = "1.6.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -24,6 +25,7 @@ espressoCore = "3.6.1"
 composeBom = "2024.04.01"
 navigationRuntimeAndroid = "2.9.2"
 navigationComposeJvmstubs = "2.9.2"
+foundationLayoutAndroid = "1.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,8 +51,8 @@ androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "
 #hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" , version.ref = "firebase-auth"}
+firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" , version.ref = "firebase-database"}
 
 maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "maps" }
 location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
@@ -60,11 +62,13 @@ compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime
 compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "composeCompiler" }
 
 voice-recognition = { group = "androidx.compose.runtime", name = "runtime-livedata" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 #kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version = "1.6.10" }
 #dagger.hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+#hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 #kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
