@@ -1,4 +1,4 @@
-package com.example.lifesaver
+package com.example.lifesaver.screens
 
 import android.content.Context
 import android.os.Build

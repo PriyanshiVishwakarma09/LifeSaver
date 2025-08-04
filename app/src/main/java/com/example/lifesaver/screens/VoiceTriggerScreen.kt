@@ -1,4 +1,4 @@
-package com.example.lifesaver
+package com.example.lifesaver.screens
 
 import android.Manifest
 import android.content.Context
@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.lifesaver.R
 import java.util.Locale
 
 
@@ -169,7 +170,7 @@ fun VoiceTriggerScreen(navController: NavController) {
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
     }
-        Spacer(modifier = Modifier.height(30.dp))
+    Spacer(modifier = Modifier.height(30.dp))
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -225,10 +226,10 @@ fun VoiceTriggerScreen(navController: NavController) {
 //                }
             )
         }
-            Spacer(modifier = Modifier.height(32.dp))
-            // Text("Or type your emergency below:")
-            EmergencyTextInputScreen(navController)
-        }
-
+        Spacer(modifier = Modifier.height(32.dp))
+        // Text("Or type your emergency below:")
+        EmergencyTextInputScreen(navController)
     }
+
+}
 
