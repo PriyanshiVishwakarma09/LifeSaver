@@ -1,6 +1,8 @@
 package com.example.lifesaver.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -31,11 +35,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,40 +54,61 @@ import com.example.lifesaver.R
 
 @Composable
 fun SignUp(navController: NavController){
+    val scrollState = rememberScrollState()
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .paint(
+                painter = painterResource(id = R.drawable.background),
+                contentScale = ContentScale.Crop
+            )
     ){
-        Image(painter = painterResource(id = R.drawable.background),
-            contentDescription = "SignUp" ,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)  // to make screen scrollable
+                .fillMaxSize(), //Adds padding around the screen
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
+
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "App Logo",
             modifier = Modifier
-                .padding(top = 30.dp)
-                .align(Alignment.TopCenter)
+                .padding(top = 80.dp)
+                .align(Alignment.CenterHorizontally)
                 .clip(shape = RoundedCornerShape(65.dp))
                 .size(130.dp),
             contentScale = ContentScale.Fit
         )
 
-        Card(modifier = Modifier.padding(top = 32.dp)
+        Card(modifier = Modifier
             //  .fillMaxWidth()
-            .padding(top = 150.dp, start = 16.dp, end = 16.dp , bottom = 10.dp)
+            .padding(top = 24.dp, start = 16.dp, end = 16.dp , bottom = 10.dp)
             .fillMaxHeight()
             .fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Sign Up", color = Color.Black , fontSize = 38.sp , fontWeight = FontWeight.Bold , modifier = Modifier.padding(16.dp))
+                Text(
+                    "Sign Up",
+                    color = Color.Black,
+                    fontSize = 38.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
 
-            Text("User Name", color = Color.Black , modifier = Modifier.padding(start = 24.dp) , fontSize = 18.sp , fontWeight = FontWeight.SemiBold)
+            Text(
+                "User Name",
+                color = Color.Black,
+                modifier = Modifier.padding(start = 24.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
 
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -91,7 +120,7 @@ fun SignUp(navController: NavController){
             OutlinedTextField(
                 value = user,
                 onValueChange = { user = it },
-                label = { Text("User Name" , color = Color.Red) },
+                label = { Text("User Name", color = Color.Red) },
                 modifier = Modifier.padding(start = 16.dp)
                     .padding(end = 16.dp)
                     .fillMaxWidth(),
@@ -100,12 +129,19 @@ fun SignUp(navController: NavController){
                     focusedBorderColor = Color.Black,
                     unfocusedBorderColor = Color.Black,
                     cursorColor = Color.Red
-                )
+                ),
+                textStyle = TextStyle(color = Color.Black)
             )
-            Spacer(modifier = Modifier.height(18.dp))
+           Spacer(modifier = Modifier.height(18.dp))
 
 
-            Text("Email", color = Color.Black , modifier = Modifier.padding(start = 24.dp) , fontSize = 18.sp , fontWeight = FontWeight.SemiBold)
+            Text(
+                "Email",
+                color = Color.Black,
+                modifier = Modifier.padding(start = 24.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
 
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -115,7 +151,7 @@ fun SignUp(navController: NavController){
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email" , color = Color.Red) },
+                label = { Text("Email", color = Color.Red) },
                 modifier = Modifier.padding(start = 16.dp)
                     .padding(end = 16.dp)
                     .fillMaxWidth(),
@@ -130,13 +166,19 @@ fun SignUp(navController: NavController){
             Spacer(modifier = Modifier.height(18.dp))
 
 
-            Text("Password", color = Color.Black , modifier = Modifier.padding(start = 24.dp) , fontSize = 18.sp , fontWeight = FontWeight.SemiBold)
+            Text(
+                "Password",
+                color = Color.Black,
+                modifier = Modifier.padding(start = 24.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
             Spacer(modifier = Modifier.height(10.dp))
             var password by remember { mutableStateOf("") }
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password" , color = Color.Red) },
+                label = { Text("Password", color = Color.Red) },
                 modifier = Modifier.padding(start = 16.dp)
                     .padding(end = 16.dp)
                     .fillMaxWidth(),
@@ -148,16 +190,20 @@ fun SignUp(navController: NavController){
                 )
             )
             Spacer(modifier = Modifier.height(22.dp))
-            Card(modifier = Modifier.padding(16.dp)
-                .fillMaxWidth(),
+            Card(
+                modifier = Modifier.padding(16.dp)
+                    .fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.Red),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            ) {
 //
                 Button(
-                    onClick = {navController.navigate("DashBoardContainer") {
-                        popUpTo("SignUp") { inclusive = true }
-                        launchSingleTop = true
-                    } },
+                    onClick = {
+                        navController.navigate("DashBoardContainer") {
+                            popUpTo("SignUp") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
@@ -179,7 +225,7 @@ fun SignUp(navController: NavController){
                 Text(text = "Already have an account? ")
 
                 TextButton(
-                    onClick = {navController.navigate("LogIn") },
+                    onClick = { navController.navigate("LogIn") },
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
@@ -190,7 +236,7 @@ fun SignUp(navController: NavController){
             }
 
 
-
+        }
         }
 
     }

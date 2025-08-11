@@ -7,10 +7,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberBasicTooltipState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -22,6 +25,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(navController: NavController){
     val scale = remember { androidx.compose.animation.core.Animatable(0f) }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(key1 = true) {
         scale.animateTo(

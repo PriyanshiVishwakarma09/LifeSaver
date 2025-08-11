@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -104,16 +107,23 @@ fun EmergencyTextInputScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Type your emergency message:", style = MaterialTheme.typography.titleMedium)
+            Text("Type your emergency message:", style = MaterialTheme.typography.titleMedium , color = Color.Black)
             Spacer(modifier = Modifier.height(16.dp))
-            TextField(
+            OutlinedTextField(
                 value = typedText,
                 onValueChange = {
                     typedText = it
                     showError = false
                 },
-                label = { Text("Enter message...") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Enter message..." , color = Color.Red) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Black,
+                    cursorColor = Color.Red
+                ),
+                textStyle = TextStyle(color = Color.Black)
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
@@ -124,7 +134,7 @@ fun EmergencyTextInputScreen(navController: NavController) {
                     .height(48.dp),
                 shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF3B4CCA),
+                    containerColor = Color.Red,
                     contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.buttonElevation(6.dp)
@@ -138,6 +148,7 @@ fun EmergencyTextInputScreen(navController: NavController) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun EmergencyTextInputScreenPreview(){

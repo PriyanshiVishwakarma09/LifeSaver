@@ -64,6 +64,8 @@ dependencies {
     //implementation(libs.compose.compiler)
     //implementation("androidx.compose.compiler:compiler:1.6.10")
 
+    implementation("androidx.compose.material:material-icons-extended")
+
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -114,6 +116,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //SOS GIF
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("io.coil-kt:coil-gif:2.4.0")
 }
 
 
