@@ -30,7 +30,7 @@ fun SosScreen() {
     Box(
         modifier = androidx.compose.ui.Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212)), // dark background
+            .background(Color.White), // dark background
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -48,7 +48,7 @@ fun SosScreen() {
 
             Text(
                 text = "Emergency Help is on the Way!",
-                color = Color.White,
+                color = Color.Black,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -57,9 +57,9 @@ fun SosScreen() {
 
             Text(
                 text = "Stay calm. We've detected your emergency and are responding.",
-                color = Color.LightGray,
+                color = Color.Black,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 modifier = Modifier.padding(horizontal = 32.dp)
             )
 

@@ -17,17 +17,21 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -39,7 +43,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -50,13 +57,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.lifesaver.R
 import java.util.Locale
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
 fun VoiceTriggerScreen(navController: NavController) {
     val context = LocalContext.current
     var isListening by remember { mutableStateOf(false) }
-    var resultText by remember { mutableStateOf("Tap the mic and say 'help or 'sos'") }
+    var resultText by remember { mutableStateOf("Tap the mic and say 'Help or 'SOS'") }
     var micPermissionGranted by remember { mutableStateOf(false) }
     val ttsRef = remember { mutableStateOf<TextToSpeech?>(null) }
 
@@ -170,51 +186,104 @@ fun VoiceTriggerScreen(navController: NavController) {
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
     }
-    Spacer(modifier = Modifier.height(30.dp))
-    Column(
+    val scrollable = rememberScrollState()
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Red)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(
+                Color.White
+            )
     ) {
-        Text(
-            text = resultText,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(140.dp) // outer circle size
-                .clip(CircleShape)
-                .background(Color(0xFFE0E0E0)) // Light gray outer circle
-                .shadow(8.dp, CircleShape, clip = false)
-                .clickable {
-                    if (!isListening) {
-                        isListening = true
-                        resultText = "Listening..."
-                        speechRecognizer?.startListening(speechIntent)
-                    } else if (!micPermissionGranted) {
-                        resultText = "Microphone permission not granted"
-                    }
-                },
+                .verticalScroll(scrollable)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.microphone),
-                contentDescription = "Mic",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
+            Row(modifier = Modifier.height(80.dp)
+                .fillMaxWidth()
+                .padding(start = 16.dp),
+                verticalAlignment = Alignment.CenterVertically ,
+                horizontalArrangement = Arrangement.Start) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "App Logo",
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+//                    .align(Alignment.TopCenter)
+                        .border(width = 0.7.dp , color = Color.LightGray , shape = RoundedCornerShape(70.dp))
+                        .clip(shape = RoundedCornerShape(70.dp))
+                        .size(50.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Text(
+                    text = "Voice Help",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1C1C1C), // Dark gray for modern feel
+                    letterSpacing = 1.5.sp,
+                    fontStyle = FontStyle.Normal,
+                    style = TextStyle(
+                        shadow = Shadow(
+                            color = Color.Gray,
+                            offset = Offset(2f, 2f),
+                            blurRadius = 4f
+                        )
+                    )
+                )
+            }
+
+            Column(modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(color = Color.LightGray)) {  }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+
+
+                Text(
+                    text = resultText,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+//                        .clip(CircleShape)
+                        .background(Color.White)
+//                        .shadow(8.dp, CircleShape, clip = false)
+                        .clickable {
+                            if (!isListening) {
+                                isListening = true
+                                resultText = "Listening..."
+                                speechRecognizer?.startListening(speechIntent)
+                            } else if (!micPermissionGranted) {
+                                resultText = "Microphone permission not granted"
+                            }
+                        },
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.mic),
+                        contentDescription = "Mic",
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(Color.White),
+                        contentScale = ContentScale.Fit
 //                .clickable {
 //                    if (!isListening){
 //                        isListening = true
@@ -224,12 +293,20 @@ fun VoiceTriggerScreen(navController: NavController) {
 //                        resultText = "Microphone permission not granted"
 //                    }
 //                }
-            )
+                    )
+                }
+                Spacer(modifier = Modifier.height(100.dp))
+                // Text("Or type your emergency below:")
+                EmergencyTextInputScreen(navController)
+            }
+
         }
-        Spacer(modifier = Modifier.height(32.dp))
-        // Text("Or type your emergency below:")
-        EmergencyTextInputScreen(navController)
-    }
+
 
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewFunction(){
+    VoiceTriggerScreen(navController = rememberNavController())
+}

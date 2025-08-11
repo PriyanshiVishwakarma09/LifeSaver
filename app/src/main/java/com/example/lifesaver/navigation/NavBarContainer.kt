@@ -3,7 +3,11 @@ package com.example.lifesaver.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.NavigationBar
@@ -23,6 +27,8 @@ import androidx.compose.material3.Icon
 import com.example.lifesaver.screens.DashBoard
 import com.example.lifesaver.screens.ProfileScreen
 import com.example.lifesaver.screens.SettingsScreen
+import com.example.lifesaver.screens.VoiceTriggerScreen
+import com.example.lifesaver.screens.MapScreen
 
 @Composable
 fun DashBoardContainer() {
@@ -37,13 +43,19 @@ fun DashBoardContainer() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("dashboard") {
-                DashBoard(navController = navController) // ✅ Just dashboard UI
+                DashBoard(navController = navController)
             }
             composable("profile") {
                 ProfileScreen(navController = navController)
             }
             composable("settings") {
                 SettingsScreen(navController = navController)
+            }
+            composable("voicetrigger"){
+                VoiceTriggerScreen(navController = navController)
+            }
+            composable("mapscreen"){
+                MapScreen(navController = navController)
             }
         }
     }
@@ -53,9 +65,13 @@ fun DashBoardContainer() {
 @Composable
 fun BottomBar(navController: NavHostController) {
     val items = listOf(
+        BottomNavItem("Location" , "mapscreen" , icon = Icons.Default.LocationOn),
+        BottomNavItem("Voice Help" , "voicetrigger" , icon = Icons.Default.Mic),
+
         BottomNavItem("Dashboard", "dashboard", icon = Icons.Default.Home),
-        BottomNavItem("Profile", "profile", icon = Icons.Default.Person),
-        BottomNavItem("Settings", "settings", icon = Icons.Default.Settings)
+        BottomNavItem("Contacts", "settings", icon = Icons.Default.Call),
+        BottomNavItem("Profile", "profile", icon = Icons.Default.Person)
+
     )
 
     NavigationBar {
