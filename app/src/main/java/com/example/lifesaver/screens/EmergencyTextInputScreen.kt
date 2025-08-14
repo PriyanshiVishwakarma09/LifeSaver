@@ -1,7 +1,9 @@
 package com.example.lifesaver.screens
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.speech.tts.TextToSpeech
@@ -44,13 +46,6 @@ import java.util.Locale
 fun EmergencyTextInputScreen(navController: NavController) {
     val context = LocalContext.current
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-//    val textToSpeech = remember {
-//        TextToSpeech(context) { status ->
-//            if (status == TextToSpeech.SUCCESS) {
-//                textToSpeech.language = Locale.ENGLISH
-//            }
-//        }
-//    }
     val ttsRef = remember { mutableStateOf<TextToSpeech?>(null) }
 
     LaunchedEffect(Unit) {
@@ -87,13 +82,32 @@ fun EmergencyTextInputScreen(navController: NavController) {
                         VibrationEffect.DEFAULT_AMPLITUDE
                     )
                 )
+
+                ttsRef.value?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                    override fun onStart(utteranceId : String?) {}
+                    override fun onDone(utteranceId: String?) {
+                        if(utteranceId == "SOS_MESSAGE"){
+                            (context as Activity).runOnUiThread {
+                                navController.navigate("dashboard"){
+                                    popUpTo("voicetrigger"){inclusive = true}
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onError(utteranceId: String?) {
+                        Log.e("TTS", "Error occurred in TTS")
+                    }
+                })
+                val params = Bundle()
+                params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SOS_MESSAGE")
                 ttsRef.value?.speak(
+                //tts.speak(
                     "Okay, we are sending emergency help!",
                     TextToSpeech.QUEUE_FLUSH,
-                    null,
-                    null
+                    params,
+                    "SOS_MESSAGE"
                 )
-                navController.navigate("sos_screen")
             } else {
                 showError = true
             }

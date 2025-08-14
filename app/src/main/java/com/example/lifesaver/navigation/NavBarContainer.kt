@@ -13,26 +13,31 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
+//import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material3.Icon
+import com.example.lifesaver.data.Contact
+import com.example.lifesaver.screens.ContactScreen
 import com.example.lifesaver.screens.DashBoard
 import com.example.lifesaver.screens.ProfileScreen
-import com.example.lifesaver.screens.SettingsScreen
 import com.example.lifesaver.screens.VoiceTriggerScreen
 import com.example.lifesaver.screens.MapScreen
+import com.example.lifesaver.screens.SosScreen
+import com.example.lifesaver.viewmodel.SOSViewModel
 
 @Composable
 fun DashBoardContainer() {
     val navController = rememberNavController()
+    val viewModel: SOSViewModel = hiltViewModel()
 
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
@@ -43,19 +48,22 @@ fun DashBoardContainer() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("dashboard") {
-                DashBoard(navController = navController)
+                DashBoard(navController = navController, viewModel = viewModel)
+            }
+            composable("sos_screen") {
+                SosScreen(navController = navController)
             }
             composable("profile") {
                 ProfileScreen(navController = navController)
             }
-            composable("settings") {
-                SettingsScreen(navController = navController)
-            }
             composable("voicetrigger"){
                 VoiceTriggerScreen(navController = navController)
             }
-            composable("mapscreen"){
+            composable("map_screen"){
                 MapScreen(navController = navController)
+            }
+            composable("setting"){
+                ContactScreen(navController = navController)
             }
         }
     }
@@ -65,11 +73,11 @@ fun DashBoardContainer() {
 @Composable
 fun BottomBar(navController: NavHostController) {
     val items = listOf(
-        BottomNavItem("Location" , "mapscreen" , icon = Icons.Default.LocationOn),
-        BottomNavItem("Voice Help" , "voicetrigger" , icon = Icons.Default.Mic),
+        BottomNavItem("Location" , "map_screen" , icon = Icons.Default.LocationOn),
+        BottomNavItem("Voice Help" , "voicetrigger" , icon = Icons.Filled.Mic),
 
         BottomNavItem("Dashboard", "dashboard", icon = Icons.Default.Home),
-        BottomNavItem("Contacts", "settings", icon = Icons.Default.Call),
+        BottomNavItem("Contacts", "setting", icon = Icons.Default.Call),
         BottomNavItem("Profile", "profile", icon = Icons.Default.Person)
 
     )
@@ -101,3 +109,4 @@ data class BottomNavItem(
     val route: String,
     val icon: ImageVector
 )
+

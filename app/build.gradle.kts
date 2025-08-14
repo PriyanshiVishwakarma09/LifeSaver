@@ -2,10 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-  //  alias(libs.plugins.hilt)
     id("com.google.gms.google-services")
-  //  kotlin("kapt")
-   // id("dagger.hilt.android.plugin")
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -87,6 +87,9 @@ dependencies {
         implementation("com.google.maps.android:maps-compose:2.11.4")
         implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("org.osmdroid:osmdroid-wms:6.1.16")
+
     // Loading profile image
     implementation("io.coil-kt:coil-compose:2.5.0")
 
@@ -95,10 +98,22 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
   // Hilt
-//    implementation(libs.hilt.android)
-//    kapt(libs.hilt.compiler)
-//    // Compose integration (if needed)
-//    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation ("com.google.dagger:hilt-android:2.51")
+    ksp ("com.google.dagger:hilt-compiler:2.51.1")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    // Room with KSP
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // ViewModel & Lifecycle
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
 
 
     // Voice recognition (LiveData for speech control)
@@ -118,8 +133,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //SOS GIF
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("io.coil-kt:coil-gif:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-gif:2.6.0")
 }
 
 

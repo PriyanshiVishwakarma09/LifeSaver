@@ -75,11 +75,13 @@ fun VoiceTriggerScreen(navController: NavController) {
     var resultText by remember { mutableStateOf("Tap the mic and say 'Help or 'SOS'") }
     var micPermissionGranted by remember { mutableStateOf(false) }
     val ttsRef = remember { mutableStateOf<TextToSpeech?>(null) }
+    var speechRecognizer by remember { mutableStateOf<SpeechRecognizer?>(null) }
 
     LaunchedEffect(Unit) {
-        val tts = TextToSpeech(context) { status ->
+        var tts: TextToSpeech? = null
+         tts = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                val result = ttsRef.value?.setLanguage(Locale.ENGLISH)
+                val result = tts?.setLanguage(Locale.ENGLISH)
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Log.e("TTS", "The Language specified is not supported!")
                 }
@@ -91,6 +93,7 @@ fun VoiceTriggerScreen(navController: NavController) {
     DisposableEffect(Unit) {
         onDispose {
             ttsRef.value?.shutdown()
+            speechRecognizer?.destroy()
         }
     }
 
@@ -106,17 +109,85 @@ fun VoiceTriggerScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
     }
-    val speechRecognizer = remember(micPermissionGranted) {
-        if (micPermissionGranted) {
-            SpeechRecognizer.createSpeechRecognizer(context)
-        } else null
-    }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            speechRecognizer?.destroy()
+    fun vibrateAndNavigate() {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(800, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(800)
+        }
+        navController.navigate("dashboard") {
+            popUpTo("voicetrigger") { inclusive = true }
         }
     }
+
+    fun handleResult(text: String) {
+        if (text.lowercase().contains("help") || text.lowercase().contains("sos")) {
+            resultText = "Okay, we are sending emergency help!"
+            ttsRef.value?.speak(resultText, TextToSpeech.QUEUE_FLUSH, null, "tts1")
+            ttsRef.value?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                override fun onStart(utteranceId: String?) {}
+                override fun onDone(utteranceId: String?) {
+                    vibrateAndNavigate()
+                }
+                override fun onError(utteranceId: String?) {
+                    vibrateAndNavigate()
+                }
+            })
+        } else {
+            resultText = "Please say 'help' or 'SOS' clearly."
+        }
+    }
+
+    fun initSpeechRecognizer(){
+        if(speechRecognizer == null){
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context).apply {
+                setRecognitionListener(object : RecognitionListener {
+                    override fun onReadyForSpeech(params: Bundle?) {
+                        Log.d("Speech", "Ready for speech")
+
+                    }
+
+                    override fun onBeginningOfSpeech() {}
+                    override fun onRmsChanged(rmsdB: Float) {}
+                    override fun onBufferReceived(buffer: ByteArray?) {}
+                    override fun onEndOfSpeech() {}
+                    override fun onError(error: Int) {
+                        val message = when (error) {
+                            SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
+                            SpeechRecognizer.ERROR_CLIENT -> "Client side error"
+                            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                            SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                            SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+                            SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
+                            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer busy"
+                            SpeechRecognizer.ERROR_SERVER -> "Server error"
+                            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
+                            else -> "Unknown error"
+                        }
+                        Toast.makeText(context, "Speech error: $message", Toast.LENGTH_SHORT).show()
+                        isListening = false
+                    }
+
+                    override fun onResults(results: Bundle?) {
+                        isListening = false
+                        val matches =
+                            results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        matches?.let {
+                            handleResult(it[0])
+                        }
+                    }
+
+
+                    override fun onPartialResults(partialResults: Bundle?) {}
+                    override fun onEvent(eventType: Int, params: Bundle?) {}
+                })
+            }
+        }
+    }
+
 
     val speechIntent = remember {
         Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -129,63 +200,7 @@ fun VoiceTriggerScreen(navController: NavController) {
         }
     }
 
-    //  @RequiresApi(Build.VERSION_CODES.O)
-    fun vibrateAndNavigate() {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(800, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(800)
-        }
-        navController.navigate("sos_screen")
-    }
 
-    fun handleResult(text: String) {
-        if (text.lowercase().contains("help") || text.lowercase().contains("sos")) {
-            resultText = "Okay, we are sending emergency help!"
-            ttsRef.value?.speak(resultText, TextToSpeech.QUEUE_FLUSH, null, null)
-            vibrateAndNavigate()
-        } else {
-            resultText = "Please say 'help' or 'SOS' clearly."
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        speechRecognizer?.setRecognitionListener(object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {}
-            override fun onBeginningOfSpeech() {}
-            override fun onRmsChanged(rmsdB: Float) {}
-            override fun onBufferReceived(buffer: ByteArray?) {}
-            override fun onEndOfSpeech() {}
-            override fun onError(error: Int) {
-                val message = when (error) {
-                    SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
-                    SpeechRecognizer.ERROR_CLIENT -> "Client side error"
-                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
-                    SpeechRecognizer.ERROR_NETWORK -> "Network error"
-                    SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-                    SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
-                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer busy"
-                    SpeechRecognizer.ERROR_SERVER -> "Server error"
-                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
-                    else -> "Unknown error"
-                }
-                Toast.makeText(context, "Speech error: $message", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResults(results: Bundle?) {
-                isListening = false
-                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                matches?.let {
-                    handleResult(it[0])
-                }
-            }
-
-            override fun onPartialResults(partialResults: Bundle?) {}
-            override fun onEvent(eventType: Int, params: Bundle?) {}
-        })
-    }
     val scrollable = rememberScrollState()
 
     Box(
@@ -213,7 +228,6 @@ fun VoiceTriggerScreen(navController: NavController) {
                     contentDescription = "App Logo",
                     modifier = Modifier
                         .padding(end = 16.dp)
-//                    .align(Alignment.TopCenter)
                         .border(width = 0.7.dp , color = Color.LightGray , shape = RoundedCornerShape(70.dp))
                         .clip(shape = RoundedCornerShape(70.dp))
                         .size(50.dp),
@@ -268,12 +282,15 @@ fun VoiceTriggerScreen(navController: NavController) {
                         .background(Color.White)
 //                        .shadow(8.dp, CircleShape, clip = false)
                         .clickable {
+                            if (!micPermissionGranted) {
+                                resultText = "Microphone permission not granted"
+                                return@clickable
+                            }
+                            initSpeechRecognizer()
                             if (!isListening) {
                                 isListening = true
                                 resultText = "Listening..."
                                 speechRecognizer?.startListening(speechIntent)
-                            } else if (!micPermissionGranted) {
-                                resultText = "Microphone permission not granted"
                             }
                         },
                 ) {
@@ -283,26 +300,13 @@ fun VoiceTriggerScreen(navController: NavController) {
                         modifier = Modifier
                             .clip(CircleShape)
                             .background(Color.White),
-                        contentScale = ContentScale.Fit
-//                .clickable {
-//                    if (!isListening){
-//                        isListening = true
-//                        resultText = "Listening..."
-//                        speechRecognizer?.startListening(speechIntent)
-//                    } else if(!micPermissionGranted){
-//                        resultText = "Microphone permission not granted"
-//                    }
-//                }
-                    )
+                        contentScale = ContentScale.Fit)
                 }
                 Spacer(modifier = Modifier.height(100.dp))
-                // Text("Or type your emergency below:")
                 EmergencyTextInputScreen(navController)
             }
 
         }
-
-
 }
 
 @Preview(showBackground = true)
