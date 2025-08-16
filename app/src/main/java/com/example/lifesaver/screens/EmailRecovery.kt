@@ -155,9 +155,6 @@ fun EmailRecovery(navController: NavController){
                     )
                 }
             }
-
-
-
         }
 
     }

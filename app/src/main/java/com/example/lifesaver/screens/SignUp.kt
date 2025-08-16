@@ -100,7 +100,6 @@ fun SignUp(navController: NavController){
 
             var user by remember { mutableStateOf("") }
 
-
             OutlinedTextField(
                 value = user,
                 onValueChange = { user = it },
@@ -171,7 +170,6 @@ fun SignUp(navController: NavController){
                 .fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.Red),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
-//
                 Button(
                     onClick = {
                         isLoading = true

@@ -32,7 +32,6 @@ fun Navigation(){
         }
         composable("EmailRecovery"){
             EmailRecovery(navController = navController)
-
         }
         composable("DashBoardContainer") {
             DashBoardContainer()// Scaffold + BottomBar + Internal NavHost
