@@ -26,10 +26,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.lifesaver.data.Contact
 import com.example.lifesaver.screens.ContactScreen
 import com.example.lifesaver.screens.DashBoard
+import com.example.lifesaver.screens.DisasterEmergencyScreen
+import com.example.lifesaver.screens.FireEmergencyScreen
 import com.example.lifesaver.screens.ProfileScreen
 import com.example.lifesaver.screens.VoiceTriggerScreen
 import com.example.lifesaver.screens.MapScreen
+import com.example.lifesaver.screens.MedicalEmergencyScreen
+import com.example.lifesaver.screens.RescueEmergencyScreen
 import com.example.lifesaver.screens.SosScreen
+import com.example.lifesaver.screens.ViolenceEmergencyScreen
 import com.example.lifesaver.viewmodel.SOSViewModel
 
 @Composable
@@ -62,6 +67,22 @@ fun DashBoardContainer() {
             }
             composable("setting"){
                 ContactScreen(navController = navController)
+            }
+            composable("medical_help") { MedicalEmergencyScreen(navController = navController) }
+            composable("fire_help") { FireEmergencyScreen(navController = navController) }
+            composable("rescue_help") { RescueEmergencyScreen(navController = navController) }
+
+
+            composable("Voilence"){
+                ViolenceEmergencyScreen(navController = navController)
+            }
+
+            composable("Disaster"){
+                DisasterEmergencyScreen(navController = navController)
+            }
+
+            composable("RescueScreen"){
+                RescueEmergencyScreen(navController = navController)
             }
         }
     }
