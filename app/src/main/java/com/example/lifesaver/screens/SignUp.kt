@@ -36,20 +36,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.lifesaver.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun SignUp(navController: NavController){
@@ -148,23 +152,42 @@ fun SignUp(navController: NavController){
 
             Text("Password", color = Color.Black , modifier = Modifier.padding(start = 24.dp) , fontSize = 18.sp , fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.height(10.dp))
+
+
+
             var password by remember { mutableStateOf("") }
+            var passwordVisible by remember { mutableStateOf(false) }
+
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password" , color = Color.Red) },
-                modifier = Modifier.padding(start = 16.dp)
-                    .padding(end = 16.dp)
+                label = { Text("Password", color = Color.Red) },
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
+                singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.Black,
                     unfocusedTextColor = Color.Black,
                     focusedBorderColor = Color.Black,
                     unfocusedBorderColor = Color.Black,
                     cursorColor = Color.Red
-                )
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Password),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = image,
+                            contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                            tint = Color.Red
+                        )
+                    }
+                }
             )
+
             Spacer(modifier = Modifier.height(22.dp))
             Card(modifier = Modifier.padding(16.dp)
                 .fillMaxWidth(),

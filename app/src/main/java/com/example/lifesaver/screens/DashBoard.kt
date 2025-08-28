@@ -197,32 +197,26 @@ fun DashBoard(navController: NavController, viewModel: SOSViewModel){
                     Row(modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly) {
                         EmergencyButton("Medical", R.drawable.medical, Color(0xFFE8F5E9), buttonModifier){
-                           viewModel.sendEmergency("Medical")
-                            navController.navigate("sos_screen")
+                            navController.navigate("medical_help")
                         }
                         EmergencyButton("fire", R.drawable.fire, Color(0xFFFFEBEE), buttonModifier){
-                            viewModel.sendEmergency("Fire")
-                            navController.navigate("sos_screen")
+                            navController.navigate("fire_help")
                         }
                         EmergencyButton("Disaster", R.drawable.disaster, Color(0xFFE0F7FA), buttonModifier){
-                            viewModel.sendEmergency("Disaster")
-                            navController.navigate("sos_screen")
+                            navController.navigate("rescue_help")
                         }
                     }
 
                     Row(modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly) {
                         EmergencyButton("Accident", R.drawable.accident, Color(0xFFEDE7F6), buttonModifier){
-                            viewModel.sendEmergency("Accident")
-                            navController.navigate("sos_screen")
+                            navController.navigate("Accident")
                         }
                         EmergencyButton("Violence", R.drawable.violence, Color(0xFFFCE4EC), buttonModifier){
-                            viewModel.sendEmergency("Violence")
-                            navController.navigate("sos_screen")
+                            navController.navigate("Voilence")
                         }
                         EmergencyButton("Rescue", R.drawable.rescue, Color(0xFFFFF9C4), buttonModifier){
-                            viewModel.sendEmergency("Rescue")
-                            navController.navigate("sos_screen")
+                            navController.navigate("RescueScreen")
                         }
                     }
                 }
