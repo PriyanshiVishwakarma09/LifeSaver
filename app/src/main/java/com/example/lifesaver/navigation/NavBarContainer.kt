@@ -3,6 +3,7 @@ package com.example.lifesaver.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Map
@@ -16,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -24,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.lifesaver.data.Contact
+import com.example.lifesaver.screens.AddContactScreen
 import com.example.lifesaver.screens.ContactScreen
 import com.example.lifesaver.screens.DashBoard
 import com.example.lifesaver.screens.DisasterEmergencyScreen
@@ -35,6 +38,8 @@ import com.example.lifesaver.screens.MedicalEmergencyScreen
 import com.example.lifesaver.screens.RescueEmergencyScreen
 import com.example.lifesaver.screens.SosScreen
 import com.example.lifesaver.screens.ViolenceEmergencyScreen
+import com.example.lifesaver.screens.WearableScreen
+import com.example.lifesaver.viewmodel.ContactViewModel
 import com.example.lifesaver.viewmodel.SOSViewModel
 
 @Composable
@@ -51,7 +56,9 @@ fun DashBoardContainer() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("dashboard") {
-                DashBoard(navController = navController, viewModel = viewModel)
+                DashBoard(navController = navController,
+                    viewModel = viewModel
+                )
             }
             composable("sos_screen") {
                 SosScreen(navController = navController)
@@ -65,8 +72,8 @@ fun DashBoardContainer() {
             composable("map_screen"){
                 MapScreen(navController = navController)
             }
-            composable("setting"){
-                ContactScreen(navController = navController)
+            composable("wearable_screen"){
+                WearableScreen(navController = navController)
             }
             composable("medical_help") { MedicalEmergencyScreen(navController = navController) }
             composable("fire_help") { FireEmergencyScreen(navController = navController) }
@@ -84,6 +91,18 @@ fun DashBoardContainer() {
             composable("RescueScreen"){
                 RescueEmergencyScreen(navController = navController)
             }
+//            composable("add_contact_route") {
+//                val viewModel: ContactViewModel = hiltViewModel()
+//                AddContactScreen(
+//                    onAdd = { name, role, phone, email ->
+//                        viewModel.addContact(name, role, phone, email)
+//                        navController.popBackStack()
+//                    },
+//                    onCancel = {
+//                        navController.popBackStack()
+//                    }
+//                )
+//            }
         }
     }
 }
@@ -96,12 +115,16 @@ fun BottomBar(navController: NavHostController) {
         BottomNavItem("Voice Help" , "voicetrigger" , icon = Icons.Filled.Mic),
 
         BottomNavItem("Dashboard", "dashboard", icon = Icons.Default.Home),
-        BottomNavItem("Contacts", "setting", icon = Icons.Default.Call),
+        BottomNavItem("Wearable", "wearable_screen", icon = Icons.Default.Favorite),
+       // BottomNavItem("Contacts", "setting_screen", icon = Icons.Default.Call),
         BottomNavItem("Profile", "profile", icon = Icons.Default.Person)
 
     )
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color.White,
+        contentColor = Color.Black
+    ) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
         items.forEach { item ->

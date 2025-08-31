@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +46,8 @@ fun EmergencyTextInputScreen(navController: NavController) {
     val context = LocalContext.current
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     val ttsRef = remember { mutableStateOf<TextToSpeech?>(null) }
+    var typedText by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val tts = TextToSpeech(context) { status ->
@@ -55,6 +56,8 @@ fun EmergencyTextInputScreen(navController: NavController) {
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Log.e("TTS", "The Language specified is not supported!")
                 }
+            } else {
+                Log.e("TTS", "Initialization failed!")
             }
         }
         ttsRef.value = tts
@@ -66,8 +69,21 @@ fun EmergencyTextInputScreen(navController: NavController) {
         }
     }
 
-    var typedText by remember { mutableStateOf("") }
-    var showError by remember { mutableStateOf(false) }
+    fun vibrateAndNavigate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(500)
+        }
+        (context as Activity).runOnUiThread {
+            navController.navigate("dashboard") {
+                popUpTo("voicetrigger") { inclusive = true }
+            }
+        }
+    }
 
     fun handleTypedMessage(message: String) {
         if (message.contains("help", ignoreCase = true) || message.contains(
@@ -75,42 +91,27 @@ fun EmergencyTextInputScreen(navController: NavController) {
                 ignoreCase = true
             )
         ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(
-                    VibrationEffect.createOneShot(
-                        500,
-                        VibrationEffect.DEFAULT_AMPLITUDE
-                    )
-                )
-
-                ttsRef.value?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
-                    override fun onStart(utteranceId : String?) {}
+            ttsRef.value?.let { tts ->
+                tts.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {}
                     override fun onDone(utteranceId: String?) {
-                        if(utteranceId == "SOS_MESSAGE"){
-                            (context as Activity).runOnUiThread {
-                                navController.navigate("dashboard"){
-                                    popUpTo("voicetrigger"){inclusive = true}
-                                }
-                            }
+                        if (utteranceId == "SOS_MESSAGE") {
+                            vibrateAndNavigate()
                         }
                     }
-
                     override fun onError(utteranceId: String?) {
-                        Log.e("TTS", "Error occurred in TTS")
+                        Log.e("TTS", "Error occurred in TTS for utteranceId: $utteranceId")
+                        vibrateAndNavigate()
                     }
                 })
+
                 val params = Bundle()
                 params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SOS_MESSAGE")
-                ttsRef.value?.speak(
-                //tts.speak(
-                    "Okay, we are sending emergency help!",
-                    TextToSpeech.QUEUE_FLUSH,
-                    params,
-                    "SOS_MESSAGE"
-                )
-            } else {
-                showError = true
+                val textToSpeak = "Okay, we are sending emergency help!"
+                tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, params, "SOS_MESSAGE")
             }
+        } else {
+            showError = true
         }
     }
 
@@ -121,7 +122,7 @@ fun EmergencyTextInputScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Type your emergency message:", style = MaterialTheme.typography.titleMedium , color = Color.Black)
+            Text("Type your emergency message:", style = MaterialTheme.typography.titleMedium, color = Color.Black)
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = typedText,
@@ -129,7 +130,7 @@ fun EmergencyTextInputScreen(navController: NavController) {
                     typedText = it
                     showError = false
                 },
-                label = { Text("Enter message..." , color = Color.Red) },
+                label = { Text("Enter message...", color = Color.Red) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -168,3 +169,5 @@ fun EmergencyTextInputScreen(navController: NavController) {
 fun EmergencyTextInputScreenPreview(){
     EmergencyTextInputScreen(navController = rememberNavController())
 }
+
+

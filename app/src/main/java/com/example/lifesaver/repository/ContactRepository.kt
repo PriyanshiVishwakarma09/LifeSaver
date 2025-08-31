@@ -1,5 +1,7 @@
 package com.example.lifesaver.repository
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.example.lifesaver.data.Contact
 import com.google.firebase.database.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,7 @@ class ContactRepository @Inject constructor() {
 
     private fun fetchContacts() {
         dbRef.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("SuspiciousIndentation")
             override fun onDataChange(snapshot: DataSnapshot) {
                 val contactList = mutableListOf<Contact>()
                 for (contactSnapshot in snapshot.children) {
@@ -31,26 +34,23 @@ class ContactRepository @Inject constructor() {
                     val phone = contactSnapshot.child("phone").getValue(String::class.java) ?: ""
                     val email = contactSnapshot.child("email").getValue(String::class.java) ?: ""
 
-                    if (name.isNotEmpty() && role.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty()) {
+                  //  if (name.isNotEmpty() && role.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty()) {
                         contactList.add(Contact(id, name, role, phone, email))
-                    }
+
                 }
                 _contacts.value = contactList
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Log the error
+                Log.e("ContactRepository", "Failed to load contacts: ${error.message}")
             }
         })
     }
 
     fun addContact(name: String, role: String, phone: String, email: String) {
         val key = dbRef.push().key ?: return
-        val newContact = mapOf(
-            "name" to name,
-            "role" to role,
-            "phone" to phone,
-            "email" to email
+        val newContact = Contact(
+            key, name,role, phone, email
         )
         dbRef.child(key).setValue(newContact)
     }

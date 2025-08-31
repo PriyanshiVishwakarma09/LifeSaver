@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -219,36 +220,6 @@ fun DashBoard(navController: NavController, viewModel: SOSViewModel){
                             navController.navigate("RescueScreen")
                         }
                     }
-                }
-            }
-            Card(
-                onClick = {
-                    navController.navigate("WearableScreen")
-                },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "Wearable Tracking",
-                        tint = Color.Red,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "Wearable Data",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
                 }
             }
         }

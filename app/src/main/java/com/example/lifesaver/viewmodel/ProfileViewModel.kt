@@ -1,40 +1,46 @@
 package com.example.lifesaver.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.lifesaver.data.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
-    private val _userProfile = mutableStateOf(UserProfile())
-    val userProfile: State<UserProfile> = _userProfile
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val dbRef = FirebaseDatabase.getInstance().getReference("users")
 
+    // Use StateFlow for better asynchronous state management
+    private val _userProfile = MutableStateFlow(UserProfile())
+    val userProfile: StateFlow<UserProfile> = _userProfile
+
     init {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        uid?.let {
         fetchUserProfile()
-    }}
+    }
 
     private fun fetchUserProfile(){
-        val uid = firebaseAuth.currentUser?.uid?:return
-        dbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+
+        // Use a ValueEventListener for real-time updates
+        dbRef.child(uid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-               val profile = snapshot.getValue(UserProfile::class.java)
+                val profile = snapshot.getValue(UserProfile::class.java)
                 Log.d("FirebaseData", "Fetched Profile: $profile")
+                // Update the state flow
                 _userProfile.value = profile ?: UserProfile()
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Firebase", "Failed to fetch profile", error.toException())
+                // Handle the error appropriately, e.g., set a loading state or show a message
             }
         })
     }
@@ -44,33 +50,18 @@ class ProfileViewModel : ViewModel() {
         onLogout()
     }
 
-    fun updateUserProfile(
-        name: String,
-        email : String,
-        phone: String,
-        bloodGroup: String,
-        allergies: String
-        ) {
-        val uid = firebaseAuth.currentUser?.uid ?: return
-        val updates = mapOf(
-            "name" to name,
-            "email" to email,
-            "phone" to phone,
-            "bloodGroup" to bloodGroup,
-            "allergies" to allergies
-        )
-        dbRef.child(uid).updateChildren(updates).addOnCompleteListener {
-            if(it.isSuccessful){
-                fetchUserProfile()
-            }
-        }
-    }
-
+    // Keep only one update function that uses a UserProfile object
     fun updateUserProfile(user: UserProfile){
         val uid = firebaseAuth.currentUser?.uid ?: return
-        dbRef.child(uid).setValue(user).addOnCompleteListener {
-            fetchUserProfile()
-        }
+        dbRef.child(uid).setValue(user)
+            .addOnCompleteListener {
+                if(it.isSuccessful) {
+                    Log.d("Firebase", "Profile updated successfully.")
+                    // The ValueEventListener will automatically fetch and update the UI
+                } else {
+                    Log.e("Firebase", "Failed to update profile", it.exception)
+                }
+            }
     }
-
 }
+

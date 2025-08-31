@@ -21,6 +21,7 @@ import com.example.lifesaver.screens.VoiceTriggerScreen
 import com.example.lifesaver.viewmodel.ContactViewModel
 import com.example.lifesaver.viewmodel.SOSViewModel
 import com.example.lifesaver.screens.WearableScreen // Import the new screen
+import com.example.lifesaver.viewmodel.WearableViewModel
 
 @Composable
 fun Navigation(){
@@ -45,33 +46,8 @@ fun Navigation(){
 
         // Add the new WearableScreen composable here
         composable("WearableScreen"){
-            WearableScreen(navController = navController)
+            val wearableViewModel: WearableViewModel = hiltViewModel()
+            WearableScreen(navController = navController, viewModel = wearableViewModel)
         }
-
-        composable("SOSScreen"){
-            SosScreen(navController = navController)
-        }
-        composable("VoiceTriggerScreen") {
-            VoiceTriggerScreen(navController = navController)
-        }
-
-        composable("MapScreen"){
-            MapScreen(navController = navController)
-        }
-        composable("SettingScreen"){
-            ContactScreen(navController = navController)
-        }
-        composable("add_contact"){ navBackStackEntry ->
-            val viewModel: ContactViewModel = hiltViewModel(navBackStackEntry)
-            AddContactScreen(
-                onAdd = {name, role, phone, email ->
-                    viewModel.addContact(name, role, phone, email)
-                    navController.popBackStack()
-                },
-                onCancel = {
-                    navController.popBackStack()
-                }
-            )
         }
     }
-}

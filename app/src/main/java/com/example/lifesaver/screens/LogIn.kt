@@ -177,7 +177,7 @@ fun LogIn(navController: NavController){
                                 }else {
                                     Toast.makeText(context, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                                 }
-                    } },
+                            } },
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(

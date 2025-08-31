@@ -8,3 +8,4 @@ data class UserProfile(
     val allergies: String = "",
     val imageUrl: String = ""
 )
+

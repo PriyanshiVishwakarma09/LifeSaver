@@ -1,6 +1,20 @@
 package com.example.lifesaver.repository
 
+import com.example.lifesaver.data.WearableData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.random.Random
+
+@Singleton
 class WearableRepository @Inject constructor() {
+
+    // The mutable state flow that will hold our wearable data
     private val _wearableData = MutableStateFlow(WearableData())
     val wearableData: StateFlow<WearableData> = _wearableData
 

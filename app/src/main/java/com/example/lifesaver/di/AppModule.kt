@@ -1,6 +1,7 @@
 package com.example.lifesaver.di
 
 import android.content.Context
+import com.example.lifesaver.repository.WearableRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -28,4 +29,10 @@ object AppModule{
     @Provides
     @Singleton
     fun provideFusedLocationClient(@ApplicationContext app: Context): FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(app)
+
+    @Provides
+    @Singleton
+    fun provideWearableRepository(): WearableRepository {
+        return WearableRepository()
+    }
 }
