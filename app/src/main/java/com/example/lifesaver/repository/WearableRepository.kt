@@ -36,16 +36,25 @@ class WearableRepository @Inject constructor() {
             while (true) {
                 // Generate realistic random data
                 val newHeartRate = Random.nextInt(60, 120) // Heart rate between 60 and 120
-                currentSteps += Random.nextInt(1, 5) // Increment steps by a small random amount
+               // currentSteps += Random.nextInt(1, 5) // Increment steps by a small random amount
 
                 _wearableData.value = _wearableData.value.copy(
                     heartRate = newHeartRate,
-                    steps = currentSteps
+                   // steps = currentSteps
                 )
+                if(newHeartRate > 110 || newHeartRate < 50){
+                    println("ALERT! Abnormal heart rate detected: $newHeartRate bpm")
+                }
 
                 delay(1000) // Update data every 1 second
             }
         }
+    }
+    fun addSteps(stepsToAdd: Int){
+        val currentSteps = _wearableData.value.steps
+        _wearableData.value = _wearableData.value.copy(
+            steps = currentSteps + stepsToAdd
+        )
     }
 
     fun stopSimulation() {

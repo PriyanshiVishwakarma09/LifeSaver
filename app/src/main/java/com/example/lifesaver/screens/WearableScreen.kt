@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lifesaver.viewmodel.WearableViewModel
+import kotlin.random.Random
 
 @Composable
 fun WearableScreen(
@@ -112,6 +113,13 @@ fun WearableScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Stop Tracking")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = { viewModel.addSteps(Random.nextInt(5, 15)) },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Add Steps")
             }
         }
     } else {

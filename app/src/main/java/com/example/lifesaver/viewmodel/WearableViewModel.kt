@@ -26,6 +26,9 @@ class WearableViewModel @Inject constructor(
     fun stopTracking() {
         wearableRepository.stopSimulation()
     }
+    fun addSteps(steps: Int){
+        wearableRepository.addSteps(steps)
+    }
 
     override fun onCleared() {
         super.onCleared()
