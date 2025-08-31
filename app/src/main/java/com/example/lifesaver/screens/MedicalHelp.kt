@@ -52,11 +52,12 @@ fun MedicalEmergencyScreen(
             Text(
                 text = "Medical Emergency",
                 fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
         }
 
-        SectionHeader("Steps to Follow")
+        SectionHeader("Steps to Follow" )
         StepItem(
             number = "1",
             title = "Call Emergency Services",
@@ -152,7 +153,8 @@ private fun SectionHeader(title: String) {
         text = title,
         fontSize = 18.sp,
         fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier.padding(top = 8.dp),
+        color = Color.Black
     )
 }
 
@@ -177,7 +179,7 @@ private fun StepItem(
                     Icon(leadingIcon, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(6.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(title,  color = Color.Black , fontWeight = FontWeight.SemiBold ,)
             }
             details.forEach {
                 Bullet(it)
@@ -204,7 +206,7 @@ private fun TipItem(
                     Icon(icon, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(6.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(title,   color = Color.Black ,fontWeight = FontWeight.SemiBold)
             }
             points.forEach { Bullet(it) }
         }
@@ -215,7 +217,7 @@ private fun TipItem(
 private fun Bullet(text: String) {
     Row(verticalAlignment = Alignment.Top) {
         Text("• ", color = Color.Black)
-        Text(text, modifier = Modifier.weight(1f))
+        Text(text, modifier = Modifier.weight(1f) , color = Color.Black)
     }
 }
 

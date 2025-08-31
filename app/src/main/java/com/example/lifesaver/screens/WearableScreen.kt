@@ -5,8 +5,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,8 +25,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.lifesaver.R
 import com.example.lifesaver.viewmodel.WearableViewModel
 import kotlin.random.Random
 
@@ -63,6 +75,34 @@ fun WearableScreen(
             bluetoothPermissionLauncher.launch(permissionsToRequest)
         }
     }
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .background(color = Color.White)
+//            .height(80.dp)
+//            .padding(12.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Image(
+//            painter = painterResource(id = R.drawable.logo),
+//            contentDescription = "App Logo",
+//            modifier = Modifier
+//                .padding(end = 16.dp)
+//                .border(width = 0.7.dp, color = Color.LightGray, shape = RoundedCornerShape(70.dp))
+//                .clip(shape = RoundedCornerShape(70.dp))
+//                .size(50.dp),
+//            contentScale = ContentScale.Fit
+//        )
+//        Text(text = "Profile", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+//        Spacer(modifier = Modifier.weight(1f))
+//        Icon(
+//            imageVector = Icons.Default.Notifications,
+//            contentDescription = "Notifications",
+//            tint = Color.Black,
+//            modifier = Modifier.padding(end = 8.dp)
+//        )
+//
+//    }
 
     Column(
         modifier = Modifier
@@ -102,7 +142,12 @@ fun WearableScreen(
             Button(
                 onClick = { viewModel.startTracking() },
                 enabled = !wearableData.isTracking,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color.Red,
+//                    contentColor = Color.White
+//                )
+
             ) {
                 Text("Start Tracking")
             }
@@ -110,14 +155,22 @@ fun WearableScreen(
             Button(
                 onClick = { viewModel.stopTracking() },
                 enabled = wearableData.isTracking,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color.Red,
+//                    contentColor = Color.White
+//                )
             ) {
                 Text("Stop Tracking")
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = { viewModel.addSteps(Random.nextInt(5, 15)) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color.Red,
+//                    contentColor = Color.White
+//                )
             ) {
                 Text("Add Steps")
             }

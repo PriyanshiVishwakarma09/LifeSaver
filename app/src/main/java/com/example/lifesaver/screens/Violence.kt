@@ -50,7 +50,7 @@ fun ViolenceEmergencyScreen(emergencyNumber: String = "100" ,
                 contentDescription = null,
                 tint = Color.Red)
             Spacer(Modifier.width(8.dp))
-            Text("Violence Emergency", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+            Text("Violence Emergency", color = Color.Black , fontSize = 28.sp, fontWeight = FontWeight.Bold)
         }
 
         // Steps
@@ -91,6 +91,7 @@ private fun SectionHeader(title: String) {
     Text(
         text = title,
         fontSize = 18.sp,
+        color = Color.Black,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(top = 8.dp)
     )
@@ -144,7 +145,7 @@ private fun TipItem(
                     androidx.compose.material3.Icon(icon, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(6.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(title, color = Color.Black, fontWeight = FontWeight.SemiBold)
             }
             points.forEach { Bullet(it) }
         }
@@ -155,7 +156,7 @@ private fun TipItem(
 private fun Bullet(text: String) {
     Row(verticalAlignment = Alignment.Top) {
         Text("• ", color = Color.Black)
-        Text(text, modifier = Modifier.weight(1f))
+        Text(text , color = Color.Black, modifier = Modifier.weight(1f))
     }
 }
 
