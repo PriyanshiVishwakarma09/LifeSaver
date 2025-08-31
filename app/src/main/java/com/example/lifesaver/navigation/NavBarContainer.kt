@@ -129,7 +129,7 @@ fun BottomBar(navController: NavHostController) {
 
         items.forEach { item ->
             NavigationBarItem(
-                icon = { Icon(item.icon, contentDescription = item.title) },
+                icon = { Icon(item.icon, contentDescription = item.title ,  tint = Color.Black) },
                 label = { Text(text = item.title) },
                 selected = currentRoute == item.route,
                 onClick = {

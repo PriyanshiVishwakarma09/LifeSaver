@@ -53,6 +53,7 @@ fun FireEmergencyScreen(
             Text(
                 text = "Fire Emergency",
                 fontSize = 28.sp,
+                color = Color.Black,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -142,7 +143,7 @@ fun ActionButtons(context: android.content.Context, number: String, emergencyTyp
         ) {
             Icon(Icons.Filled.LocationOn, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Share Location")
+            Text("Share Location" , color = Color.Black)
         }
     }
 }
@@ -171,6 +172,7 @@ private fun SectionHeader(title: String) {
     Text(
         text = title,
         fontSize = 18.sp,
+        color = Color.Black,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(top = 8.dp)
     )
@@ -224,7 +226,7 @@ private fun TipItem(
                     Icon(icon, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(6.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(title, fontWeight = FontWeight.SemiBold , color = Color.Black)
             }
             points.forEach { Bullet(it) }
         }

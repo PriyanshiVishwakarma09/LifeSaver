@@ -52,6 +52,7 @@ fun AccidentEmergencyScreen(
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "Accident Emergency",
+                color = Color.Black,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -169,6 +170,7 @@ private fun SectionHeader(title: String) {
     Text(
         text = title,
         fontSize = 18.sp,
+        color = Color.Black,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(top = 8.dp)
     )
@@ -195,7 +197,7 @@ private fun StepItem(
                     Icon(leadingIcon, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(6.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(title,color = Color.Black, fontWeight = FontWeight.SemiBold)
             }
             details.forEach {
                 Bullet(it)
@@ -222,7 +224,7 @@ private fun TipItem(
                     Icon(icon, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(6.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(title,color = Color.Black, fontWeight = FontWeight.SemiBold)
             }
             points.forEach { Bullet(it) }
         }
