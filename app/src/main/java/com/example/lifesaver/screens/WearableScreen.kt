@@ -50,7 +50,8 @@ fun WearableScreen(
     val context = LocalContext.current
     val wearableData by viewModel.wearableData.collectAsState()
     var hasBluetoothPermissions by remember {
-        mutableStateOf(false
+        mutableStateOf(
+            false
         )
     }
 
@@ -75,135 +76,153 @@ fun WearableScreen(
             bluetoothPermissionLauncher.launch(permissionsToRequest)
         }
     }
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .background(color = Color.White)
-//            .height(80.dp)
-//            .padding(12.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Image(
-//            painter = painterResource(id = R.drawable.logo),
-//            contentDescription = "App Logo",
-//            modifier = Modifier
-//                .padding(end = 16.dp)
-//                .border(width = 0.7.dp, color = Color.LightGray, shape = RoundedCornerShape(70.dp))
-//                .clip(shape = RoundedCornerShape(70.dp))
-//                .size(50.dp),
-//            contentScale = ContentScale.Fit
-//        )
-//        Text(text = "Profile", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-//        Spacer(modifier = Modifier.weight(1f))
-//        Icon(
-//            imageVector = Icons.Default.Notifications,
-//            contentDescription = "Notifications",
-//            tint = Color.Black,
-//            modifier = Modifier.padding(end = 8.dp)
-//        )
-//
-//    }
-
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        if(hasBluetoothPermissions){
-        // Status Text
-        Text(
-            text = if (wearableData.isTracking) "Tracking..." else "Stopped",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (wearableData.isTracking) Color.Green else Color.Red
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Data Display Cards
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            DataCard("Heart Rate", "${wearableData.heartRate} bpm")
-            DataCard("Steps", "${wearableData.steps}")
-        }
-
-        Spacer(modifier = Modifier.height(64.dp))
-
-        // Control Buttons
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Button(
-                onClick = { viewModel.startTracking() },
-                enabled = !wearableData.isTracking,
-                modifier = Modifier.weight(1f),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color.Red,
-//                    contentColor = Color.White
-//                )
-
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White)
+                    .height(80.dp)
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Start Tracking")
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(
-                onClick = { viewModel.stopTracking() },
-                enabled = wearableData.isTracking,
-                modifier = Modifier.weight(1f),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color.Red,
-//                    contentColor = Color.White
-//                )
-            ) {
-                Text("Stop Tracking")
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(
-                onClick = { viewModel.addSteps(Random.nextInt(5, 15)) },
-                modifier = Modifier.weight(1f),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color.Red,
-//                    contentColor = Color.White
-//                )
-            ) {
-                Text("Add Steps")
-            }
-        }
-    } else {
-            Text(
-                "Bluetooth permissions are required to access wearable data.",
-                modifier = Modifier.padding(16.dp),
-                color = Color.Red,
-                fontSize = 18.sp,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
-                    val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        arrayOf(
-                            Manifest.permission.BLUETOOTH_CONNECT,
-                            Manifest.permission.BLUETOOTH_SCAN
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "App Logo",
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .border(
+                            width = 0.7.dp,
+                            color = Color.LightGray,
+                            shape = RoundedCornerShape(70.dp)
                         )
-                    } else {
-                        arrayOf(
-                            Manifest.permission.BLUETOOTH,
-                            Manifest.permission.BLUETOOTH_ADMIN
-                        )
+                        .clip(shape = RoundedCornerShape(70.dp))
+                        .size(50.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(
+                    text = "Heart Rate",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "Notifications",
+                    tint = Color.Black,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                if (hasBluetoothPermissions) {
+                    // Status Text
+                    Text(
+                        text = if (wearableData.isTracking) "Tracking..." else "Stopped",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (wearableData.isTracking) Color.Green else Color.Red
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // Data Display Cards
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        DataCard("Heart Rate", "${wearableData.heartRate} bpm")
+                        DataCard("Steps", "${wearableData.steps}")
                     }
-                    bluetoothPermissionLauncher.launch(permissionsToRequest)
+
+                    Spacer(modifier = Modifier.height(64.dp))
+
+                    // Control Buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Button(
+                            onClick = { viewModel.startTracking() },
+                            enabled = !wearableData.isTracking,
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Red,
+                                contentColor = Color.White
+                            )
+
+                        ) {
+                            Text("Start Tracking")
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Button(
+                            onClick = { viewModel.stopTracking() },
+                            enabled = wearableData.isTracking,
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Red,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text("Stop Tracking")
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Button(
+                            onClick = { viewModel.addSteps(Random.nextInt(5, 15)) },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Red,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text("Add Steps")
+                        }
+                    }
+                } else {
+                    Text(
+                        "Bluetooth permissions are required to access wearable data.",
+                        modifier = Modifier.padding(16.dp),
+                        color = Color.Red,
+                        fontSize = 18.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            val permissionsToRequest =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    arrayOf(
+                                        Manifest.permission.BLUETOOTH_CONNECT,
+                                        Manifest.permission.BLUETOOTH_SCAN
+                                    )
+                                } else {
+                                    arrayOf(
+                                        Manifest.permission.BLUETOOTH,
+                                        Manifest.permission.BLUETOOTH_ADMIN
+                                    )
+                                }
+                            bluetoothPermissionLauncher.launch(permissionsToRequest)
+                        }
+                    ) {
+                        Text("Allow Bluetooth Access")
+                    }
                 }
-            ) {
-                Text("Allow Bluetooth Access")
             }
         }
-        }
+    }
 }
 
 @Composable
